@@ -2,6 +2,7 @@ import nltk
 import pickle
 import re
 import numpy as np
+import pandas as pd
 
 nltk.download('stopwords')
 from nltk.corpus import stopwords
@@ -49,12 +50,14 @@ def load_embeddings(embeddings_path):
     ########################
     #### YOUR CODE HERE ####
     ########################
-
+    se = pd.read_csv('drive/My Drive/MODEL_NAME.tsv', sep='\t', header=None)
+    embeddings = dict(zip(se.iloc[:, 0].values, list(se.iloc[:, 1:].values)))
+    return embeddings, len(embeddings['word'])
     # remove this when you're done
-    raise NotImplementedError(
-        "Open utils.py and fill with your code. In case of Google Colab, download"
-        "(https://github.com/hse-aml/natural-language-processing/blob/master/project/utils.py), "
-        "edit locally and upload using '> arrow on the left edge' -> Files -> UPLOAD")
+    # raise NotImplementedError(
+    #     "Open utils.py and fill with your code. In case of Google Colab, download"
+    #     "(https://github.com/hse-aml/natural-language-processing/blob/master/project/utils.py), "
+    #     "edit locally and upload using '> arrow on the left edge' -> Files -> UPLOAD")
 
 
 def question_to_vec(question, embeddings, dim):
@@ -65,14 +68,29 @@ def question_to_vec(question, embeddings, dim):
     ########################
     #### YOUR CODE HERE ####
     ########################
+    """
+        question: a string
+        embeddings: dict where the key is a word and a value is its' embedding
+        dim: size of the representation
 
-    # remove this when you're done
-    raise NotImplementedError(
-        "Open utils.py and fill with your code. In case of Google Colab, download"
-        "(https://github.com/hse-aml/natural-language-processing/blob/master/project/utils.py), "
-        "edit locally and upload using '> arrow on the left edge' -> Files -> UPLOAD")
-
-
+        result: vector representation for the question
+    """
+    ######################################
+    ######### YOUR CODE HERE #############
+    ######################################
+def question_to_vec(question, embeddings, dim=300):
+    result = np.zeros(dim, dtype='float32')
+    nwords = 0
+    words_in_ques = question.split(" ")
+    for word in words_in_ques:
+        if word in embeddings:
+            result += embeddings[word]
+            nwords += 1
+    if(nwords==0):
+        return np.zeros(dim)
+    else:
+        return result/nwords
+    
 def unpickle_file(filename):
     """Returns the result of unpickling the file content."""
     with open(filename, 'rb') as f:
