@@ -3,7 +3,7 @@ from sklearn.metrics.pairwise import pairwise_distances_argmin
 
 from chatterbot import ChatBot
 from chatterbot.trainers import ChatterBotCorpusTrainer
-from utils import *
+# from utils import *
 
 
 class ThreadRanker(object):
@@ -24,9 +24,8 @@ class ThreadRanker(object):
 
         # HINT: you have already implemented a similar routine in the 3rd assignment.
         
-        question_vec = question_to_vec(question ,self.word_embeddings, self.embeddings_dim)
-        similarity_vecs = cosine_similarity(ques_vec, thread_embeddings)
-        best_thread = np.argsort(similarity_vecs.reshape(-1))[-1]
+        question_vec = question_to_vec(question ,self.word_embeddings, self.embeddings_dim).reshape(1,-1)
+        best_thread = pairwise_distances_argmin(question_vec, thread_embeddings, metric='cosine')[0]
         return thread_ids[best_thread]
 
 
@@ -56,8 +55,8 @@ class DialogueManager(object):
         #### YOUR CODE HERE ####
         ########################
         self.chitchat_bot = ChatBot('CodBot')
-        self.chitchat_trainer = ChatterBotCorpusTrainer(self.chitchat_bot)
-        self.chitchat_trainer.train("chatterbot.corpus.english")
+        self.chitchat_bot.set_trainer(ChatterBotCorpusTrainer)
+        self.chitchat_bot.train("chatterbot.corpus.english")
 
        
     def generate_answer(self, question):
@@ -67,7 +66,7 @@ class DialogueManager(object):
         # Don't forget to prepare question and calculate features for the question.
         
         prepared_question = text_prepare(question)
-        features = question_to_vec(prepared_question, self.word_embeddings, self.embeddings_dim)
+        features = self.tfidf_vectorizer.transform([prepared_question, ])
         intent = self.intent_recognizer.predict(features)
 
         # Chit-chat part:   
@@ -82,7 +81,6 @@ class DialogueManager(object):
             tag = self.tag_classifier.predict(features)
             
             # Pass prepared_question to thread_ranker to get predictions.
-            thread_id = self.ThreadRanker.get_best_thread(question, tag)
+            thread_id = self.thread_ranker.get_best_thread(question, *tag)
            
             return self.ANSWER_TEMPLATE % (tag, thread_id)
-
