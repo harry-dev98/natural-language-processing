@@ -7,6 +7,17 @@ import os
 import json
 
 from requests.compat import urljoin
+from dialogue_manager import DialogueManager
+
+
+# Paths for all resources for the bot.
+RESOURCE_PATH = {
+    'INTENT_RECOGNIZER': 'intent_recognizer.pkl',
+    'TAG_CLASSIFIER': 'tag_classifier.pkl',
+    'TFIDF_VECTORIZER': 'tfidf_vectorizer.pkl',
+    'THREAD_EMBEDDINGS_FOLDER': 'thread_embeddings_by_tags',
+    'WORD_EMBEDDINGS': 'word_embeddings.tsv',
+}
 
 
 class BotHandler(object):
@@ -84,7 +95,7 @@ def main():
     # This is the point where you plug it into the Telegram bot. 
     # Do not forget to import all needed dependencies when you do so.
     
-    simple_manager = SimpleDialogueManager()
+    simple_manager = SimpleDialogueManager(RESOURCE_PATH)
     bot = BotHandler(token, simple_manager)
     
     ###############################################################
