@@ -9,11 +9,11 @@ from nltk.corpus import stopwords
 
 # Paths for all resources for the bot.
 RESOURCE_PATH = {
-    'INTENT_RECOGNIZER': 'intent_recognizer.pkl',
-    'TAG_CLASSIFIER': 'tag_classifier.pkl',
-    'TFIDF_VECTORIZER': 'tfidf_vectorizer.pkl',
-    'THREAD_EMBEDDINGS_FOLDER': 'thread_embeddings_by_tags',
-    'WORD_EMBEDDINGS': 'word_embeddings.tsv',
+    'INTENT_RECOGNIZER': './drive/My Drive/intent_recognizer.pkl',
+    'TAG_CLASSIFIER': './drive/My Drive/tag_classifier.pkl',
+    'TFIDF_VECTORIZER': './drive/My Drive/tfidf_vectorizer.pkl',
+    'THREAD_EMBEDDINGS_FOLDER': './drive/My Drive/thread_embeddings_by_tags',
+    'WORD_EMBEDDINGS': './drive/My Drive/word_embeddings.tsv'
 }
 
 
@@ -34,10 +34,8 @@ def text_prepare(text):
 
 def load_embeddings(embeddings_path):
     """Loads pre-trained word embeddings from tsv file.
-
     Args:
       embeddings_path - path to the embeddings file.
-
     Returns:
       embeddings - dict mapping words to vectors;
       embeddings_dim - dimension of the vectors.
@@ -50,7 +48,7 @@ def load_embeddings(embeddings_path):
     ########################
     #### YOUR CODE HERE ####
     ########################
-    se = pd.read_csv('drive/My Drive/MODEL_NAME.tsv', sep='\t', header=None)
+    se = pd.read_csv(embeddings_path, sep='\t', header=None)
     embeddings = dict(zip(se.iloc[:, 0].values, list(se.iloc[:, 1:].values)))
     return embeddings, len(embeddings['word'])
     # remove this when you're done
@@ -72,13 +70,11 @@ def question_to_vec(question, embeddings, dim):
         question: a string
         embeddings: dict where the key is a word and a value is its' embedding
         dim: size of the representation
-
         result: vector representation for the question
     """
     ######################################
     ######### YOUR CODE HERE #############
     ######################################
-def question_to_vec(question, embeddings, dim=300):
     result = np.zeros(dim, dtype='float32')
     nwords = 0
     words_in_ques = question.split(" ")
