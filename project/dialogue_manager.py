@@ -56,7 +56,7 @@ class DialogueManager(object):
         #### YOUR CODE HERE ####
         ########################
         self.chitchat_bot = ChatBot('CodBot')
-        self.chitchat_trainer = ChatterBotCorpusTrainer(chatbot)
+        self.chitchat_trainer = ChatterBotCorpusTrainer(self.chitchat_bot)
         self.chitchat_trainer.train("chatterbot.corpus.english")
 
        
